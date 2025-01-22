@@ -1,1 +1,0 @@
-# alquilatucancha-backend-challenge
