@@ -22,11 +22,16 @@
   },
   "dependencies": {
     "@nestjs/axios": "0.1.0",
+    "@nestjs/cache-manager": "3.0.0",
     "@nestjs/common": "9.0.0",
     "@nestjs/config": "2.2.0",
     "@nestjs/core": "9.0.0",
     "@nestjs/cqrs": "9.0.1",
     "@nestjs/platform-fastify": "9.0.11",
+    "@nestjs/schedule": "5.0.1",
+    "cache-manager": "6.3.2",
+    "install": "0.13.0",
+    "keyv": "5.2.3",
     "moment": "2.29.4",
     "nestjs-zod": "1.2.1",
     "reflect-metadata": "0.1.13",
@@ -55,7 +60,7 @@
     "ts-loader": "9.2.3",
     "ts-node": "10.0.0",
     "tsconfig-paths": "4.0.0",
-    "typescript": "4.3.5"
+    "typescript": "5.7.3"
   },
   "engines": {
     "node": "16.17.0"
