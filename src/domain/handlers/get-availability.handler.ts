@@ -23,14 +23,12 @@ export class GetAvailabilityHandler
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
-  async execute(
-    query: GetAvailabilityQuery,
-  ): Promise<ClubWithAvailability[] | any> {
+  async execute(query: GetAvailabilityQuery): Promise<ClubWithAvailability[]> {
     const cacheKey = `availability:${query.placeId}:${query.date}`;
     const cachedData = await this.cacheManager.get(cacheKey);
 
     if (cachedData) {
-      return cachedData;
+      return cachedData as ClubWithAvailability[];
     }
 
     const clubs_with_availability: ClubWithAvailability[] = [];
