@@ -1,5 +1,7 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Cache } from 'cache-manager';
 
 import {
   ClubWithAvailability,
@@ -15,11 +17,23 @@ export class GetAvailabilityHandler
   implements IQueryHandler<GetAvailabilityQuery>
 {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     @Inject(ALQUILA_TU_CANCHA_CLIENT)
     private alquilaTuCanchaClient: AlquilaTuCanchaClient,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   async execute(query: GetAvailabilityQuery): Promise<ClubWithAvailability[]> {
+    const cacheKey = `availability:${query.placeId}:${query.date}`;
+    const cachedData = await this.cacheManager.get(cacheKey);
+
+    if (cachedData) {
+      return cachedData as ClubWithAvailability[];
+    }
+
     const clubs_with_availability: ClubWithAvailability[] = [];
     const clubs = await this.alquilaTuCanchaClient.getClubs(query.placeId);
     for (const club of clubs) {
@@ -41,6 +55,9 @@ export class GetAvailabilityHandler
         courts: courts_with_availability,
       });
     }
+
+    await this.cacheManager.set(cacheKey, clubs_with_availability, 300000);
+
     return clubs_with_availability;
   }
 }
